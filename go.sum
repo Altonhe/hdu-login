@@ -15,6 +15,8 @@ github.com/mattn/go-isatty v0.0.10 h1:qxFzApOv4WsAL965uUPIsXzAKCZxN2p9UqdhFS4ZW1
 github.com/mattn/go-isatty v0.0.10/go.mod h1:qgIWMr58cqv1PHHyhnkY9lrL7etaEgOFcMEpPG5Rm84=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
+github.com/play175/wifiNotifier v0.0.0-20200325045133-1f760fe14a4d h1:sTwspfFVx9ht+7cmuiPqnWVyGzrBfrL9AiMHfJU/ZZE=
+github.com/play175/wifiNotifier v0.0.0-20200325045133-1f760fe14a4d/go.mod h1:DSUJw60Yn9aBeRSh+U5GjnLBoGCF/wS55gRfPxuowQE=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/robertkrimen/otto v0.0.0-20211008084715-4eacda02dd21 h1:uMgr5kPPCGOlEPx6lE8GPYjFkAN4ZDA9FX++QjIZn6Q=
