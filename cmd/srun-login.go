@@ -50,7 +50,7 @@ func main() {
 		}
 		f, err := json.Marshal(c)
 		if err != nil {
-			log.Error("Failed to create config")
+			log.Error("Failed to create config: %v", err)
 		}
 		err = os.WriteFile("config.json", f, fs.ModePerm)
 		if err != nil {
@@ -68,11 +68,13 @@ func main() {
 		login(c)
 	}
 
+	var prev string
 	wifiNotifier.SetWifiNotifier(func(ssid string) {
-		if ssid == c.SSID {
+		if ssid == c.SSID && ssid != prev {
 			log.Info("Switch WIFI to %s, attempt to connect", c.SSID)
 			time.Sleep(5 * time.Second)
 			login(c)
+			prev = ssid
 		} else {
 			log.Info("Switch WIFI to %s, ignoring...", wifiNotifier.GetCurrentSSID())
 		}
