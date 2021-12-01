@@ -16,6 +16,7 @@ import (
 	"os/signal"
 	"strings"
 	"syscall"
+	"time"
 
 	"github.com/pkg/errors"
 	log "unknwon.dev/clog/v2"
@@ -28,6 +29,7 @@ type config struct {
 	Password string `json:"password"`
 	SSID     string `json:"SSID"`
 	Host     string `json:"host"`
+	ACID     string
 }
 
 func main() {
@@ -37,7 +39,7 @@ func main() {
 		panic(err)
 	}
 
-	host := flag.String("host", "https://login.hdu.edu.cn/", "")
+	host := flag.String("host", "https://login.hdu.edu.cn", "")
 	username := flag.String("username", "", "")
 	password := flag.String("password", "", "")
 	SSID := flag.String("ssid", "i-HDU", "")
@@ -82,11 +84,20 @@ LOGIN:
 
 		switch redirectURL.Host {
 		case u.Host:
+			acId := "1"
+			q := redirectURL.Query()
+			arr, ok := q["ac_id"]
+			if ok && len(arr) > 0 {
+				acId = arr[0]
+
+			}
+
+			c.ACID = acId
 			err := login(c)
 			if err != nil {
 				log.Error("Failed to login: %v", err)
 			}
-		case "go.microsoft.com":
+		case "www.msn.com":
 			log.Info("Succeed Login!")
 			break LOGIN
 		case "2.2.2.2":
@@ -96,6 +107,7 @@ LOGIN:
 				log.Error("Failed to authenticate: %v", err)
 			}
 		}
+		time.Sleep(time.Second * 3)
 	}
 
 	sig := make(chan os.Signal, 1)
@@ -104,7 +116,7 @@ LOGIN:
 }
 
 func login(c *config) error {
-	client := srun.NewClient(c.Host, c.Username, c.Password)
+	client := srun.NewClient(c.Host, c.Username, c.Password, c.ACID)
 	challengeResp, err := client.GetChallenge()
 	if err != nil {
 		return errors.Wrap(err, "get challenge response")
@@ -124,7 +136,10 @@ func login(c *config) error {
 func getMicrosoftRedirectResponse() (*url.URL, error) {
 	client := &http.Client{
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
-			return http.ErrUseLastResponse
+			if len(via) > 1 {
+				return http.ErrUseLastResponse
+			}
+			return nil
 		},
 	}
 	resp, err := client.Get("http://www.msftconnecttest.com/redirect")

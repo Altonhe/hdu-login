@@ -1,4 +1,5 @@
 // Copyright 2021 E99p1ant. All rights reserved.
+// Copyright 2021 Alton. All rights reserved.
 // Use of this source code is governed by a MIT-style
 // license that can be found in the LICENSE file.
 
@@ -10,8 +11,11 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strconv"
+	"time"
 
 	"github.com/pkg/errors"
+	log "unknwon.dev/clog/v2"
 
 	"github.com/vidar-team/srun-login/internal/crypotoutil"
 )
@@ -29,13 +33,13 @@ type Client struct {
 }
 
 // NewClient returns a new srun client with the provided host, username and password.
-func NewClient(host, username, password string) *Client {
+func NewClient(host, username, password, acid string) *Client {
 	return &Client{
 		host:     host,
 		username: username,
 		password: password,
 
-		acID: "0",
+		acID: acid,
 		typ:  "1",
 		n:    "200",
 	}
@@ -131,8 +135,10 @@ func (c *Client) Portal(challenge string) (*PortalResponse, error) {
 	query.Set("ip", c.ip)
 	query.Set("n", c.n)
 	query.Set("type", c.typ)
+	query.Set("_", strconv.Itoa(int(time.Now().Unix()*1000)))
 
 	u.RawQuery = query.Encode()
+	log.Trace("req: %v", u.String())
 
 	resp, err := http.Get(u.String())
 	if err != nil {
